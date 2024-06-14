@@ -15,6 +15,7 @@ pipeline {
         SONAR_URL = "http://34.46.21.82:9000"
         SONAR_TOKEN = credentials('sonar_creds')
         DOCKER_HUB = "docker.io/i27anilb3"
+        DOCKER_CREDS = credentials('docker_creds')
     }  
 
     stages{
@@ -62,6 +63,8 @@ pipeline {
                 echo "**************************** Building Docker Image ****************************"
                 docker build --force-rm --no-cache --build-arg JAR_SOURCE=i27-${env.APPLICATION_NAME}-${env.POM_VERSION}.${env.POM_PACKAGING} -t ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${GIT_COMMIT} ./.cicd
                 docker images
+                echo "********Docker login******"
+                docker login -u ${DOCKER_CREDS_USR} -p ${DOCKER_CREDS_PSW}
                 """
             }
         }
