@@ -49,14 +49,20 @@ pipeline {
             }
         }
 
-        stage ('Docker Format') {
+        stage ('Docker Build and push') {
             steps {
-                //the this current format
-                echo "the actual format is i27-${env.APPLICATION_NAME}-${env.POM_VERSION}.${env.POM_PACKAGING}"
-                //custom format
-                echo "The Custom Format is ${env.APPLICATION_NAME}-${currentBuild.number}-${BRANCH_NAME}.${env.POM_PACKAGING}"
+                echo "starting docker Build"
             }
         }
+
+        // stage ('Docker Format') {
+        //     steps {
+        //         //the this current format
+        //         echo "the actual format is i27-${env.APPLICATION_NAME}-${env.POM_VERSION}.${env.POM_PACKAGING}"
+        //         //custom format
+        //         echo "The Custom Format is ${env.APPLICATION_NAME}-${currentBuild.number}-${BRANCH_NAME}.${env.POM_PACKAGING}"
+        //     }
+        // }
 
     }
 }
