@@ -20,18 +20,18 @@ pipeline {
                 archiveArtifacts artifacts: 'target/*jar'
             }
         }
-        // stage('Unit Test') {
-        //      steps {
-        //          echo "Executing UNIX test cases for ${env.APPLICATION_NAME} application"
-        //          sh 'mvn test'
-        //      }
-        //      post {
-        //          always {
-        //              junit 'target/surefire-reports/*xml'
-        //              jacoco execPattern: 'target/jacoco.exec'
-        //          }
-        //      }
-        // }
+//        stage('Unit Test') {
+//      steps {
+//          echo "Executing UNIX test cases for ${env.APPLICATION_NAME} application"
+//          sh 'mvn test'
+//      }
+//      post {
+//          always {
+//              junit 'target/surefire-reports/*xml'
+//              jacoco execPattern: 'target/jacoco.exec'
+//          }
+//      }
+// }
         stage ('Sonar') {
             steps {
                 sh """
