@@ -14,7 +14,8 @@ pipeline {
         POM_PACKAGING = readMavenPom().getPackaging()
         SONAR_URL = "http://34.46.21.82:9000"
         SONAR_TOKEN = credentials('sonar_creds')
-    }
+        DOCKER_HUB = "docker.io/i27anilb3"
+    }  
 
     stages{
        stage ('Build') {
@@ -52,6 +53,15 @@ pipeline {
         stage ('Docker Build and push') {
             steps {
                 echo "starting docker Build"
+                sh """
+                ls -la
+                pwd
+                cp ${WORKSPACE}/target/i27-${env.APPLICATION_NAME}-${env.POM_VERSION}.${env.POM_PACKAGING} ./.cicd/
+                echo "Listing file in /cicd folder
+                ls -la ./.cicd/
+                echo "Building docker image"
+                docker build --build-arg JAR_SOURCE=${env.APPLICATION_NAME}-${env.POM_VERSION}.${env.POM_PACKAGING} -t ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${GIT_COMMIT} ./.cicd/
+                """
             }
         }
 
