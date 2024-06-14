@@ -36,23 +36,27 @@ pipeline {
 //          }
 //      }
 // }
-        stage ('Sonar') {
+stage ('Sonar') {
             steps {
-                 echo "starting Quality Gates"
-                 withSonarQubeEnv('sonarqube'){
-                 sh """
-                 echo "starting Sonar"
-                 mvn sonar:sonar \
-                    -Dsonar.projectKey=i27-eureka \
-                    -Dsonar.host.url=${env.SONAR_URL} \
-                    -Dsonar.login=${SONAR_TOKEN}
-                    """
+                // Code Quality needs to be implemented 
+                echo "Starting Sonar Scans with Quality Gates"
+                // before we go to next step, install sonarqube plugin 
+                // next goto manage jenkins > configure > sonarqube > give url and token for sonarqube
+                withSonarQubeEnv('SonarQube'){ // SonarQube is the name that we configured in manage jenkins > sonarqube 
+                    sh """
+                        mvn sonar:sonar \
+                            -Dsonar.projectKey=i27-eureka \
+                            -Dsonar.host.url=${env.SONAR_URL} \
+                            -Dsonar.login=${SONAR_TOKEN} 
+                        """
                 }
-                 timeout (time: 2, unit: 'MINUTES')
-                 script { 
-                    waitForQualityGate abortPipeline: true
+                timeout (time: 2, unit: 'MINUTES') { // NANOSECONDS, SECONDS, MINUTES, HOURS, DAYS
+                    script {
+                        waitForQualityGate abortPipeline: true
+                    }
                 }
             }
+        }
 
         stage ('Docker Format') {
             steps {
@@ -65,4 +69,4 @@ pipeline {
 
     }
 }
-}       
+    
