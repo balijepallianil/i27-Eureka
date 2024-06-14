@@ -10,6 +10,8 @@ pipeline {
 
     environment {
         APPLICATION_NAME = "Eureka"
+        POM_VERSION = readMavenPom().getVersion()
+        POM_PACKAGING = readMavenPom().getPackaging()
         SONAR_URL = "http://34.46.21.82:9000"
         SONAR_TOKEN = credentials('sonar_creds')
     }
@@ -43,6 +45,12 @@ pipeline {
                     -Dsonar.host.url=${env.SONAR_URL} \
                     -Dsonar.login=${SONAR_TOKEN}
                     """
+            }
+        }
+
+        stage ('Docker Format') {
+            steps {
+                echo "the actual format is i27-${env.APPLICATION_NAME}-${env.POM_VERSION}-${env.POM_PACKAGING}"
             }
         }
 
