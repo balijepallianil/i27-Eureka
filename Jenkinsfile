@@ -25,6 +25,12 @@ pipeline {
                 echo "Executing UNIX test cases for ${env.APPLICATION_NAME} application"
                 sh 'mvn test'
             }
+            post {
+                always {
+                    junit 'target/surefire-reports/*xml'
+                    jacoco execpattern 'target/jacoco.exec'
+                }
+            }
         }
     }
 }
