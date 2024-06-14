@@ -38,15 +38,21 @@ pipeline {
 // }
         stage ('Sonar') {
             steps {
-                sh """
-                echo "starting Sonar"
-                mvn sonar:sonar \
+                 echo "starting Quality Gates"
+                 withSonarQubeEnv('sonarqube'){
+                 sh """
+                 echo "starting Sonar"
+                 mvn sonar:sonar \
                     -Dsonar.projectKey=i27-eureka \
                     -Dsonar.host.url=${env.SONAR_URL} \
                     -Dsonar.login=${SONAR_TOKEN}
                     """
+                }
+                 timeout (time: 2, unit: 'MINUTES')
+                 script { 
+                    waitForQualityGate abortPipeline: true
+                }
             }
-        }
 
         stage ('Docker Format') {
             steps {
