@@ -36,7 +36,7 @@ pipeline {
             steps {
                 sh """
                 echo "starting Sonar"
-                mvn clean verify sonar:sonar \
+                mvn sonar:sonar \
                     -Dsonar.projectKey=i27-eureka \
                     -Dsonar.host.url=http://34.46.21.82:9000 \
                     -Dsonar.login=sqp_b5dad269e742cf193fc1c43166bfc2a6d58275bc
