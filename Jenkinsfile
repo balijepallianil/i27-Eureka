@@ -53,7 +53,7 @@ pipeline {
                 //the this current format
                 echo "the actual format is i27-${env.APPLICATION_NAME}-${env.POM_VERSION}.${env.POM_PACKAGING}"
                 //custom format
-                echo "the custom format is ${env.APPLICATION_NAME}-${currentBuild.numner}-${BRANCH_NAME}.${env.POM_PACKAGING}"
+                echo "The Custom Format is ${env.APPLICATION_NAME}-${currentBuild.number}-${BRANCH_NAME}.${env.POM_PACKAGING}"
             }
         }
 
