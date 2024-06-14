@@ -32,8 +32,8 @@ pipeline {
         //          }
         //      }
         // }
-        stage ('Sonar')
-              steps {
+        stage ('Sonar') {
+            steps {
                 sh """
                 echo "starting Sonar"
                 mvn clean verify sonar:sonar \
@@ -41,7 +41,9 @@ pipeline {
                     -Dsonar.host.url=http://34.46.21.82:9000 \
                     -Dsonar.login=sqp_b5dad269e742cf193fc1c43166bfc2a6d58275bc
                     """
-              }
+            }
+        }
+
     }
 }
         
