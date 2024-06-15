@@ -4,11 +4,11 @@ pipeline {
     }
 
     parameters {
-        choice (name: 'buildOnly'
+        choice (name: 'buildOnly',
                choices: 'no\nyes',
                Description: "Build the Application Only"
         )
-        choice (name: 'ScanOnly'
+        choice (name: 'ScanOnly',
                choices: 'no\nyes',
                Description: "only Scan the Application"
         )
@@ -16,19 +16,19 @@ pipeline {
                choices: 'no\nyes',
                Description: "Docker Build and push to registry"
         )
-        choice (name: 'deployToDev'
+        choice (name: 'deployToDev',
                choices: 'no\nyes',
                Description: "Deploy app in DEV"
         )
-        choice (name: 'deployToTest'
+        choice (name: 'deployToTest',
                choices: 'no\nyes',
                Description: "Deploy app in TEST"
         )
-        choice (name: 'deployToStaging'
+        choice (name: 'deployToStaging',
                choices: 'no\nyes',
                Description: "Deploy app in STAGE"
         )
-        choice (name: 'deployToProd'
+        choice (name: 'deployToProd',
                choices: 'no\nyes',
                Description: "Deploy app in PROD"
         )
