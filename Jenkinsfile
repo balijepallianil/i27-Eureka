@@ -76,19 +76,19 @@ pipeline {
         stage ('Deploy To Dev') {
             steps {
                 echo "*******Deploy to DEV********"
-                sh "sshpass -p ${MAHA_CREDS_PSW} ssh -o StrictHostKeyChecking=no ${MAHA_CREDS_USR}@${DOCKER_DEPLOY_HOST_IP}" uptime
+                //sh "sshpass -p ${MAHA_CREDS_PSW} ssh -o StrictHostKeyChecking=no ${MAHA_CREDS_USR}@${DOCKER_DEPLOY_HOST_IP}" uptime
+            }
+
+         // stage ('Docker Format') {
+         //     steps {
+         //         //the this current format
+         //         echo "the actual format is i27-${env.APPLICATION_NAME}-${env.POM_VERSION}.${env.POM_PACKAGING}"
+         //         //custom format
+         //         echo "The Custom Format is ${env.APPLICATION_NAME}-${currentBuild.number}-${BRANCH_NAME}.${env.POM_PACKAGING}"
+         //     }
+         // }
+
         }
-
-        // stage ('Docker Format') {
-        //     steps {
-        //         //the this current format
-        //         echo "the actual format is i27-${env.APPLICATION_NAME}-${env.POM_VERSION}.${env.POM_PACKAGING}"
-        //         //custom format
-        //         echo "The Custom Format is ${env.APPLICATION_NAME}-${currentBuild.number}-${BRANCH_NAME}.${env.POM_PACKAGING}"
-        //     }
-        // }
-
     }
-}
     
 }
