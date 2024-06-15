@@ -75,8 +75,18 @@ pipeline {
 
         stage ('Deploy To Dev') {
             steps {
-                echo "*******Deploy to DEV********"
-                sh('sshpass -p $MAHA_CREDS_PSW ssh -o StrictHostKeyChecking=no $MAHA_CREDS_USR@$DOCKER_DEPLOY_HOST_IP docker run -d -p 5671:8761 --name $APPLICATION_NAME -dev $DOCKER_HUB/$APPLICATION_NAME:$GIT_COMMIT')
+                echo "*******Deploy to DEV********" 
+                script {
+                sh('sshpass -p $MAHA_CREDS_PSW ssh -o StrictHostKeyChecking=no $MAHA_CREDS_USR@$DOCKER_DEPLOY_HOST_IP docker pull $DOCKER_HUB/$APPLICATION_NAME:$GIT_COMMIT')
+                try {
+                    sh('sshpass -p $MAHA_CREDS_PSW ssh -o StrictHostKeyChecking=no $MAHA_CREDS_USR@$DOCKER_DEPLOY_HOST_IP docker stop $APPLICATION_NAME') 
+                    sh('sshpass -p $MAHA_CREDS_PSW ssh -o StrictHostKeyChecking=no $MAHA_CREDS_USR@$DOCKER_DEPLOY_HOST_IP docker rm $APPLICATION_NAME')
+                 } catch(err) {
+                    echo "caught Error : $err"
+                 }
+                 sh('sshpass -p $MAHA_CREDS_PSW ssh -o StrictHostKeyChecking=no $MAHA_CREDS_USR@$DOCKER_DEPLOY_HOST_IP docker run -d -p 5671:8761 --name $APPLICATION_NAME -dev $DOCKER_HUB/$APPLICATION_NAME:$GIT_COMMIT')
+                }
+                
             }
 
          // stage ('Docker Format') {
