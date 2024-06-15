@@ -110,7 +110,7 @@ pipeline {
     
 }
 
-def dockerDeploy(envDeply, hostPort, contPort) {
+def dockerDeploy(envDeploy, hostPort, contPort) {
     return {
         echo "*******Deploy to $envDeploy********" 
         script {
