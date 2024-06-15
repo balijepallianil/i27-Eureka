@@ -113,8 +113,8 @@ pipeline {
 def dockerDeploy(envDeploy, hostPort, contPort) {
     return {
         echo "*******Deploy to $envDeploy********" 
-        echo $envDeploy
-        echo $hostPort
-        echo $contPort
+        echo "env is : ${envDeploy}"
+        echo " hostPort : ${hostPort}"
+        echo " contPort : ${contPort}"
     }
 }
