@@ -79,7 +79,7 @@ pipeline {
                 // some block
                 //sshpass -p password ssh -o StrictHostkeyChecking=no username@Ip Command
                 //sh "sshpass -p ${PASSWORD} ssh -o StrictHostkeyChecking=no ${USERNAME}@${DOCKER_DEPLOY_HOST_IP} hostname -i"
-                echo "${PASSWORD}"
+                sh "sshpass -p ${PASSWORD} ssh -o StrictHostKeyChecking=no ${USERNAME}@${DOCKER_DEPLOY_HOST_IP} uptime"
                 }
             }
                 
