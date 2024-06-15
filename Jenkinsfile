@@ -2,7 +2,6 @@ pipeline {
     agent {
         label 'k8s-slave'
     }
-
     parameters {
         choice (name: 'buildOnly',
                choices: 'no\nyes',
@@ -50,17 +49,17 @@ pipeline {
         MAHA_CREDS = credentials('maha_creds')
         // DOCKER_HOST_IP = "10.1.0.9"
     }  
-
     stages{
        stage ('Build') {
-            steps {
-                when {
-                    any0f {
-                        expression {
-                            params.buildOnly == 'yes'
-                        }
+            when {
+                any0f {
+                    expression {
+                        params.buildOnly == 'yes'
                     }
                 }
+            }
+            steps {
+
                 echo "Bulding ${env.APPLICATION_NAME} application"
                 sh 'mvn clean package -DskipTests=true'
                 archiveArtifacts artifacts: 'target/*jar'
@@ -79,15 +78,16 @@ pipeline {
 //      }
 // }
         stage ('Sonar') {
-            //sqa_a25af99d06b87a263ccf7aed9033cd9d80b97b36
-            steps {
-                when {
-                    any0f {
-                        expression {
-                            params.scanOnly == 'yes'
-                        }
+            when {
+                any0f {
+                    expression {
+                        params.scanOnly == 'yes'
                     }
                 }
+            }
+            //sqa_a25af99d06b87a263ccf7aed9033cd9d80b97b36
+            steps {
+
                 sh """
                 echo "Starting Sonar Scan"
                 mvn sonar:sonar \
@@ -99,14 +99,15 @@ pipeline {
         }
 
         stage ('Docker Build and push') {
-            steps {
                 when {
                     any0f {
                         expression {
                             params.dockerPush == 'yes'
                         }
                     }
-                }
+                }            
+            steps {
+
                 echo "Starting Docker build stage"
                 sh """
                 ls -la
@@ -126,14 +127,15 @@ pipeline {
         }
 
         stage ('Deploy To Dev') {
-            steps {
                  when {
                     any0f {
                         expression {
                             params.deployToDev == 'yes'
                         }
                     }
-                }              
+                } 
+            steps {
+             
               script {
                 dockerDeploy('dev', '5761', '8761').call()
               }
@@ -142,14 +144,15 @@ pipeline {
 
         }
         stage ('Deploy To Test') {
-            steps {
                 when {
                     any0f {
                         expression {
                             params.deployToTest == 'yes'
                         }
                     }
-                }   
+                } 
+            steps {
+  
               script {
                 dockerDeploy('test', '6761', '8761').call()
               }
@@ -157,14 +160,15 @@ pipeline {
             }  
         }   
         stage ('Deploy To Staging') {
-            steps {
                 when {
                     any0f {
                         expression {
                             params.deployToStaging == 'yes'
                         }
                     }
-                }   
+                }  
+            steps {
+ 
               script {
                 dockerDeploy('stage', '7761', '8761').call()
               }
@@ -179,7 +183,8 @@ pipeline {
                             params.deployToProd == 'yes'
                         }
                     }
-                }   
+                }
+   
               script {
                 dockerDeploy('PROD', '8761', '8761').call()
               }
