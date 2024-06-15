@@ -77,8 +77,6 @@ pipeline {
                 echo "*******Deploy to DEV********"
                 withCredentials([usernamePassword(credentialsId: 'maha_creds', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
                 // some block
-                //sshpass -p password ssh -o StrictHostkeyChecking=no username@Ip Command
-                //sh "sshpass -p ${PASSWORD} ssh -o StrictHostkeyChecking=no ${USERNAME}@${DOCKER_DEPLOY_HOST_IP} hostname -i"
                 sh "sshpass -p $PASSWORD ssh -o StrictHostKeyChecking=no ${USERNAME}@${DOCKER_DEPLOY_HOST_IP} uptime"
                 }
             }
