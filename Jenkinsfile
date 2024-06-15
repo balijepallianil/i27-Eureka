@@ -176,7 +176,6 @@ pipeline {
             }   
         }   
         stage ('Deploy To PROD') {
-            steps {
                 when {
                     anyOf {
                         expression {
@@ -184,6 +183,8 @@ pipeline {
                         }
                     }
                 }
+            steps {
+
    
               script {
                 dockerDeploy('PROD', '8761', '8761').call()
