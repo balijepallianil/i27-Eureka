@@ -166,13 +166,20 @@ pipeline {
             }   
         }   
         stage ('Deploy To PROD') {
-                when {
+            when {
+                allOf {
                     anyOf {
                         expression {
                             params.deployToProd == 'yes'
+                            // other condition as well
                         }
                     }
+                    anyOf {
+                        branch 'release/*'
+                        // one more condition as well
+                    }
                 }
+            }
             steps {
                 timeout(time: 300, unit: 'SECONDS') {
                 input message: "Deploying to ${env.APPLICATION_NAME} to production ???", ok: 'yes', submitter: 'mat'
