@@ -12,7 +12,7 @@ pipeline {
                choices: 'no\nyes',
                Description: "only Scan the Application"
         )
-        choice (name: 'dockerPush'
+        choice (name: 'dockerPush',
                choices: 'no\nyes',
                Description: "Docker Build and push to registry"
         )
