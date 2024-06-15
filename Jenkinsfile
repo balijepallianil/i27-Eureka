@@ -209,7 +209,8 @@ def imageValidation() {
         println ("pulling he docker Image")
         try {
             sh "docker pull ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${GIT_COMMIT}"
-        } catch (Expression e){
+        } 
+        catch (Expression e) {
             println("OOPS!!!!!, docker image with this tag doesnot exists, So creating the image")
             buildApp().call()
             dockerBuildandPush().call()
