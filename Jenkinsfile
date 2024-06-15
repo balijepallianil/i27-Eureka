@@ -6,31 +6,31 @@ pipeline {
     parameters {
         choice (name: 'buildOnly',
                choices: 'no\nyes',
-               Description: "Build the Application Only"
+               description: "Build the Application Only"
         )
-        choice (name: 'ScanOnly',
+        choice (name: 'scanOnly',
                choices: 'no\nyes',
-               Description: "only Scan the Application"
+               description: "only Scan the Application"
         )
         choice (name: 'dockerPush',
                choices: 'no\nyes',
-               Description: "Docker Build and push to registry"
+               description: "Docker Build and push to registry"
         )
         choice (name: 'deployToDev',
                choices: 'no\nyes',
-               Description: "Deploy app in DEV"
+               description: "Deploy app in DEV"
         )
         choice (name: 'deployToTest',
                choices: 'no\nyes',
-               Description: "Deploy app in TEST"
+               description: "Deploy app in TEST"
         )
         choice (name: 'deployToStaging',
                choices: 'no\nyes',
-               Description: "Deploy app in STAGE"
+               description: "Deploy app in STAGE"
         )
         choice (name: 'deployToProd',
                choices: 'no\nyes',
-               Description: "Deploy app in PROD"
+               description: "Deploy app in PROD"
         )
     }
 
@@ -84,7 +84,7 @@ pipeline {
                 when {
                     any0f {
                         expression {
-                            params.ScanOnly == 'yes'
+                            params.scanOnly == 'yes'
                         }
                     }
                 }
