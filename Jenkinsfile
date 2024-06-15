@@ -3,6 +3,37 @@ pipeline {
         label 'k8s-slave'
     }
 
+    parameters {
+        choice (name: 'buildOnly'
+               choices: 'no\nyes',
+               Description: "Build the Application Only"
+        )
+        choice (name: 'ScanOnly'
+               choices: 'no\nyes',
+               Description: "only Scan the Application"
+        )
+        choice (name: 'dockerPush'
+               choices: 'no\nyes',
+               Description: "Docker Build and push to registry"
+        )
+        choice (name: 'deployToDev'
+               choices: 'no\nyes',
+               Description: "Deploy app in DEV"
+        )
+        choice (name: 'deployToTest'
+               choices: 'no\nyes',
+               Description: "Deploy app in TEST"
+        )
+        choice (name: 'deployToStaging'
+               choices: 'no\nyes',
+               Description: "Deploy app in STAGE"
+        )
+        choice (name: 'deployToProd'
+               choices: 'no\nyes',
+               Description: "Deploy app in PROD"
+        )
+    }
+
     tools{
         maven 'Maven-3.8.8'
         jdk 'JDK-17'
@@ -23,6 +54,13 @@ pipeline {
     stages{
        stage ('Build') {
             steps {
+                when {
+                    any0f {
+                        expression {
+                            params.buildOnly == 'yes'
+                        }
+                    }
+                }
                 echo "Bulding ${env.APPLICATION_NAME} application"
                 sh 'mvn clean package -DskipTests=true'
                 archiveArtifacts artifacts: 'target/*jar'
@@ -43,6 +81,13 @@ pipeline {
         stage ('Sonar') {
             //sqa_a25af99d06b87a263ccf7aed9033cd9d80b97b36
             steps {
+                when {
+                    any0f {
+                        expression {
+                            params.ScanOnly == 'yes'
+                        }
+                    }
+                }
                 sh """
                 echo "Starting Sonar Scan"
                 mvn sonar:sonar \
@@ -55,7 +100,14 @@ pipeline {
 
         stage ('Docker Build and push') {
             steps {
-                  echo "Starting Docker build stage"
+                when {
+                    any0f {
+                        expression {
+                            params.dockerPush == 'yes'
+                        }
+                    }
+                }
+                echo "Starting Docker build stage"
                 sh """
                 ls -la
                 pwd
@@ -75,6 +127,13 @@ pipeline {
 
         stage ('Deploy To Dev') {
             steps {
+                 when {
+                    any0f {
+                        expression {
+                            params.deployToDev == 'yes'
+                        }
+                    }
+                }              
               script {
                 dockerDeploy('dev', '5761', '8761').call()
               }
@@ -84,6 +143,13 @@ pipeline {
         }
         stage ('Deploy To Test') {
             steps {
+                when {
+                    any0f {
+                        expression {
+                            params.deployToTest == 'yes'
+                        }
+                    }
+                }   
               script {
                 dockerDeploy('test', '6761', '8761').call()
               }
@@ -92,6 +158,13 @@ pipeline {
         }   
         stage ('Deploy To Staging') {
             steps {
+                when {
+                    any0f {
+                        expression {
+                            params.deployToStaging == 'yes'
+                        }
+                    }
+                }   
               script {
                 dockerDeploy('stage', '7761', '8761').call()
               }
@@ -100,6 +173,13 @@ pipeline {
         }   
         stage ('Deploy To PROD') {
             steps {
+                when {
+                    any0f {
+                        expression {
+                            params.deployToProd == 'yes'
+                        }
+                    }
+                }   
               script {
                 dockerDeploy('PROD', '8761', '8761').call()
               }
