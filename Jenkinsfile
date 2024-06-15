@@ -79,12 +79,12 @@ pipeline {
                 script {
                 sh('sshpass -p $MAHA_CREDS_PSW ssh -o StrictHostKeyChecking=no $MAHA_CREDS_USR@$DOCKER_DEPLOY_HOST_IP docker pull $DOCKER_HUB/$APPLICATION_NAME:$GIT_COMMIT')
                 try {
-                    sh('sshpass -p $MAHA_CREDS_PSW ssh -o StrictHostKeyChecking=no $MAHA_CREDS_USR@$DOCKER_DEPLOY_HOST_IP docker stop $APPLICATION_NAME') 
-                    sh('sshpass -p $MAHA_CREDS_PSW ssh -o StrictHostKeyChecking=no $MAHA_CREDS_USR@$DOCKER_DEPLOY_HOST_IP docker rm $APPLICATION_NAME')
+                    sh('sshpass -p $MAHA_CREDS_PSW ssh -o StrictHostKeyChecking=no $MAHA_CREDS_USR@$DOCKER_DEPLOY_HOST_IP docker stop $APPLICATION_NAME-dev') 
+                    sh('sshpass -p $MAHA_CREDS_PSW ssh -o StrictHostKeyChecking=no $MAHA_CREDS_USR@$DOCKER_DEPLOY_HOST_IP docker rm $APPLICATION_NAME-dev')
                  } catch(err) {
                     echo "caught Error : $err"
                  }
-                 sh('sshpass -p $MAHA_CREDS_PSW ssh -o StrictHostKeyChecking=no $MAHA_CREDS_USR@$DOCKER_DEPLOY_HOST_IP docker run -d -p 5671:8761 --name $APPLICATION_NAME -dev $DOCKER_HUB/$APPLICATION_NAME:$GIT_COMMIT')
+                 sh('sshpass -p $MAHA_CREDS_PSW ssh -o StrictHostKeyChecking=no $MAHA_CREDS_USR@$DOCKER_DEPLOY_HOST_IP docker run -d -p 5671:8761 --name $APPLICATION_NAME-dev $DOCKER_HUB/$APPLICATION_NAME:$GIT_COMMIT')
                 }
                 
             }
@@ -106,7 +106,38 @@ pipeline {
                 
             }     
         }   
-
+        stage ('Deploy To Staging') {
+            steps {
+                echo "*******Deploy to TEST********" 
+                script {
+                sh('sshpass -p $MAHA_CREDS_PSW ssh -o StrictHostKeyChecking=no $MAHA_CREDS_USR@$DOCKER_DEPLOY_HOST_IP docker pull $DOCKER_HUB/$APPLICATION_NAME:$GIT_COMMIT')
+                try {
+                    sh('sshpass -p $MAHA_CREDS_PSW ssh -o StrictHostKeyChecking=no $MAHA_CREDS_USR@$DOCKER_DEPLOY_HOST_IP docker stop $APPLICATION_NAME-stage') 
+                    sh('sshpass -p $MAHA_CREDS_PSW ssh -o StrictHostKeyChecking=no $MAHA_CREDS_USR@$DOCKER_DEPLOY_HOST_IP docker rm $APPLICATION_NAME-stage')
+                 } catch(err) {
+                    echo "caught Error : $err"
+                 }
+                 sh('sshpass -p $MAHA_CREDS_PSW ssh -o StrictHostKeyChecking=no $MAHA_CREDS_USR@$DOCKER_DEPLOY_HOST_IP docker run -d -p 7671:8761 --name $APPLICATION_NAME-stage $DOCKER_HUB/$APPLICATION_NAME:$GIT_COMMIT')
+                }
+                
+            }     
+        }   
+        stage ('Deploy To PROD') {
+            steps {
+                echo "*******Deploy to TEST********" 
+                script {
+                sh('sshpass -p $MAHA_CREDS_PSW ssh -o StrictHostKeyChecking=no $MAHA_CREDS_USR@$DOCKER_DEPLOY_HOST_IP docker pull $DOCKER_HUB/$APPLICATION_NAME:$GIT_COMMIT')
+                try {
+                    sh('sshpass -p $MAHA_CREDS_PSW ssh -o StrictHostKeyChecking=no $MAHA_CREDS_USR@$DOCKER_DEPLOY_HOST_IP docker stop $APPLICATION_NAME-PROD') 
+                    sh('sshpass -p $MAHA_CREDS_PSW ssh -o StrictHostKeyChecking=no $MAHA_CREDS_USR@$DOCKER_DEPLOY_HOST_IP docker rm $APPLICATION_NAME-PROD')
+                 } catch(err) {
+                    echo "caught Error : $err"
+                 }
+                 sh('sshpass -p $MAHA_CREDS_PSW ssh -o StrictHostKeyChecking=no $MAHA_CREDS_USR@$DOCKER_DEPLOY_HOST_IP docker run -d -p 8671:8761 --name $APPLICATION_NAME-PROD $DOCKER_HUB/$APPLICATION_NAME:$GIT_COMMIT')
+                }
+                
+            }     
+        }  
     }
     
 }
