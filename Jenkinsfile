@@ -52,7 +52,7 @@ pipeline {
     stages{
        stage ('Build') {
             when {
-                any0f {
+                anyOf {
                     expression {
                         params.buildOnly == 'yes'
                     }
@@ -79,7 +79,7 @@ pipeline {
 // }
         stage ('Sonar') {
             when {
-                any0f {
+                anyOf {
                     expression {
                         params.scanOnly == 'yes'
                     }
@@ -100,7 +100,7 @@ pipeline {
 
         stage ('Docker Build and push') {
                 when {
-                    any0f {
+                    anyOf {
                         expression {
                             params.dockerPush == 'yes'
                         }
@@ -128,7 +128,7 @@ pipeline {
 
         stage ('Deploy To Dev') {
                  when {
-                    any0f {
+                    anyOf {
                         expression {
                             params.deployToDev == 'yes'
                         }
@@ -145,7 +145,7 @@ pipeline {
         }
         stage ('Deploy To Test') {
                 when {
-                    any0f {
+                    anyOf {
                         expression {
                             params.deployToTest == 'yes'
                         }
@@ -161,7 +161,7 @@ pipeline {
         }   
         stage ('Deploy To Staging') {
                 when {
-                    any0f {
+                    anyOf {
                         expression {
                             params.deployToStaging == 'yes'
                         }
@@ -178,7 +178,7 @@ pipeline {
         stage ('Deploy To PROD') {
             steps {
                 when {
-                    any0f {
+                    anyOf {
                         expression {
                             params.deployToProd == 'yes'
                         }
