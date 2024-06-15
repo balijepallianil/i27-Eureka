@@ -16,6 +16,7 @@ pipeline {
         SONAR_TOKEN = credentials('sonar_creds')
         DOCKER_HUB = "docker.io/i27anilb3"
         DOCKER_CREDS = credentials('docker_creds')
+        MAHA_CREDS = credentials('maha_creds')
         // DOCKER_HOST_IP = "10.1.0.9"
     }  
 
@@ -75,11 +76,7 @@ pipeline {
         stage ('Deploy To Dev') {
             steps {
                 echo "*******Deploy to DEV********"
-                withCredentials([usernamePassword(credentialsId: 'maha_creds', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
-                // some block
-                sh "sshpass -p $PASSWORD ssh -o StrictHostKeyChecking=no ${USERNAME}@${DOCKER_DEPLOY_HOST_IP} uptime"
-                }
-            }
+                sh "sshpass -p ${MAHA_CREDS_PSW} ssh -o StrictHostKeyChecking=no ${MAHA_CREDS_USR}@${DOCKER_DEPLOY_HOST_IP}" uptime
         }
 
         // stage ('Docker Format') {
