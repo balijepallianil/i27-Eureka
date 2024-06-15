@@ -113,16 +113,8 @@ pipeline {
 def dockerDeploy(envDeploy, hostPort, contPort) {
     return {
         echo "*******Deploy to $envDeploy********" 
-        script {
-            sh('sshpass -p $MAHA_CREDS_PSW ssh -o StrictHostKeyChecking=no $MAHA_CREDS_USR@$DOCKER_DEPLOY_HOST_IP docker pull $DOCKER_HUB/$APPLICATION_NAME:$GIT_COMMIT')
-            try {
-             sh('sshpass -p $MAHA_CREDS_PSW ssh -o StrictHostKeyChecking=no $MAHA_CREDS_USR@$DOCKER_DEPLOY_HOST_IP docker stop $APPLICATION_NAME-$envDeploy') 
-             sh('sshpass -p $MAHA_CREDS_PSW ssh -o StrictHostKeyChecking=no $MAHA_CREDS_USR@$DOCKER_DEPLOY_HOST_IP docker rm $APPLICATION_NAME-$envDeploy')
-            } 
-            catch(err) {
-            echo "caught Error : $err"
-            }
-            sh('sshpass -p $MAHA_CREDS_PSW ssh -o StrictHostKeyChecking=no $MAHA_CREDS_USR@$DOCKER_DEPLOY_HOST_IP docker run -d -p $hostPort:$contPort --name $APPLICATION_NAME-$envDeploy $DOCKER_HUB/$APPLICATION_NAME:$GIT_COMMIT')
-        }
+        sh ('echo $envDeploy')
+        sh ('echo $hostPort')
+        sh ('echo $contPort')
     }
 }
