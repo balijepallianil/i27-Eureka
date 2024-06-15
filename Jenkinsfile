@@ -174,6 +174,8 @@ pipeline {
                     }
                 }
             steps {
+                timeout(time: 300, unit: 'SECONDS') {
+                input message: "Deploying to ${env.APPLICATION_NAME} to production ???", ok: 'yes', submitter: 'mat'
               script {
                 imageValidation().call()
                 dockerDeploy('PROD', '8761', '8761').call()
