@@ -89,16 +89,24 @@ pipeline {
                 
             }
 
-         // stage ('Docker Format') {
-         //     steps {
-         //         //the this current format
-         //         echo "the actual format is i27-${env.APPLICATION_NAME}-${env.POM_VERSION}.${env.POM_PACKAGING}"
-         //         //custom format
-         //         echo "The Custom Format is ${env.APPLICATION_NAME}-${currentBuild.number}-${BRANCH_NAME}.${env.POM_PACKAGING}"
-         //     }
-         // }
-
         }
+        stage ('Deploy To Test') {
+            steps {
+                echo "*******Deploy to TEST********" 
+                script {
+                sh('sshpass -p $MAHA_CREDS_PSW ssh -o StrictHostKeyChecking=no $MAHA_CREDS_USR@$DOCKER_DEPLOY_HOST_IP docker pull $DOCKER_HUB/$APPLICATION_NAME:$GIT_COMMIT')
+                try {
+                    sh('sshpass -p $MAHA_CREDS_PSW ssh -o StrictHostKeyChecking=no $MAHA_CREDS_USR@$DOCKER_DEPLOY_HOST_IP docker stop $APPLICATION_NAME-test') 
+                    sh('sshpass -p $MAHA_CREDS_PSW ssh -o StrictHostKeyChecking=no $MAHA_CREDS_USR@$DOCKER_DEPLOY_HOST_IP docker rm $APPLICATION_NAME-test')
+                 } catch(err) {
+                    echo "caught Error : $err"
+                 }
+                 sh('sshpass -p $MAHA_CREDS_PSW ssh -o StrictHostKeyChecking=no $MAHA_CREDS_USR@$DOCKER_DEPLOY_HOST_IP docker run -d -p 6671:8761 --name $APPLICATION_NAME-test $DOCKER_HUB/$APPLICATION_NAME:$GIT_COMMIT')
+                }
+                
+            }     
+        }   
+
     }
     
 }
