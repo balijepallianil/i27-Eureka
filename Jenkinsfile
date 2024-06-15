@@ -119,10 +119,9 @@ def dockerDeploy(envDeploy, hostPort, contPort) {
         //sh('sshpass -p $MAHA_CREDS_PSW ssh -o StrictHostKeyChecking=no $MAHA_CREDS_USR@$DOCKER_DEPLOY_HOST_IP docker pull $DOCKER_HUB/$APPLICATION_NAME:$GIT_COMMIT')
         sh "sshpass -p ${MAHA_CREDS_PSW} ssh -o StrictHostKeyChecking=no ${MAHA_CREDS_USR}@${DOCKER_DEPLOY_HOST_IP} docker pull ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${GIT_COMMIT}"
         try {
-        sh "sshpass -p ${MAHA_CREDS_PSW} ssh -o StrictHostKeyChecking=no ${MAHA_CREDS_USR}@${DOCKER_DEPLOY_HOST_IP} docker stop ${env.APPLICATION_NAME}-$envDeploy"
-        sh "sshpass -p ${MAHA_CREDS_PSW} ssh -o StrictHostKeyChecking=no ${MAHA_CREDS_USR}@${DOCKER_DEPLOY_HOST_IP} docker rm ${env.APPLICATION_NAME}-$envDeploy"
-        }
-        catch {
+            sh "sshpass -p ${MAHA_CREDS_PSW} ssh -o StrictHostKeyChecking=no ${MAHA_CREDS_USR}@${DOCKER_DEPLOY_HOST_IP} docker stop ${env.APPLICATION_NAME}-$envDeploy"
+            sh "sshpass -p ${MAHA_CREDS_PSW} ssh -o StrictHostKeyChecking=no ${MAHA_CREDS_USR}@${DOCKER_DEPLOY_HOST_IP} docker rm ${env.APPLICATION_NAME}-$envDeploy"
+        }catch(err) {
             echo "caught Error : $err"
         }
         sh "sshpass -p ${MAHA_CREDS_PSW} ssh -o StrictHostKeyChecking=no ${MAHA_CREDS_USR}@${DOCKER_DEPLOY_HOST_IP} docker run -d -p $hostPort:$contPort --name ${env.APPLICATION_NAME}-$envDeploy ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${GIT_COMMIT}"
