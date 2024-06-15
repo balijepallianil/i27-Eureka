@@ -85,7 +85,7 @@ pipeline {
         stage ('Deploy To Test') {
             steps {
               script {
-                dockerDeploy('Test', '6761', '8761').call()
+                dockerDeploy('test', '6761', '8761').call()
               }
                 
             }  
