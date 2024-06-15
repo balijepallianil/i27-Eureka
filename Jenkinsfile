@@ -76,7 +76,7 @@ pipeline {
         stage ('Deploy To Dev') {
             steps {
                 echo "*******Deploy to DEV********"
-        
+                sh('sshpass -p $MAHA_CREDS_PSW ssh -o StrictHostKeyChecking=no ${MAHA_CREDS_USR}@${DOCKER_DEPLOY_HOST_IP} uptime')
             }
 
          // stage ('Docker Format') {
