@@ -7,6 +7,10 @@ pipeline {
                choices: 'no\nyes',
                description: "Build the Application Only"
         )
+        choice (name: 'dockerPush',
+               choices: 'no\nyes',
+               description: "Docker Build and push to registry"
+        )
     }    
 
     tools{
@@ -15,6 +19,10 @@ pipeline {
     }
     environment {
         APPLICATION_NAME = "eureka"
+        POM_VERSION = readMavenPom().getVersion()
+        POM_PACKAGING = readMavenPom().getPackaging()
+        DOCKER_HUB = "docker.io/i27anilb3"
+        DOCKER_CREDS = credentials('docker_creds')
     }
     stages{
        stage ('Build') {
@@ -32,6 +40,21 @@ pipeline {
 
             }
         }
+        stage ('Docker Build and push') {
+            when {
+                anyOf {
+                    expression {
+                        params.dockerPush == 'yes'
+                    }
+                }
+            }            
+            steps {
+                script  {
+                    dockerBuildandPush().call()
+                }
+
+            }
+        }
     }
 }
 
@@ -42,5 +65,19 @@ def buildApp() {
 
     }
 }
+
+def dockerBuildandPush() {
+    return {
+        echo "Starting Docker build stage"
+        sh "cp ${WORKSPACE}/target/i27-${env.APPLICATION_NAME}-${env.POM_VERSION}.${env.POM_PACKAGING} ./.cicd/"
+        echo "**************************** Building Docker Image ****************************"
+        sh "docker build --force-rm --no-cache --build-arg JAR_SOURCE=i27-${env.APPLICATION_NAME}-${env.POM_VERSION}.${env.POM_PACKAGING} -t ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${GIT_COMMIT} ./.cicd"
+        echo "********Docker login******"
+        sh "docker login -u ${DOCKER_CREDS_USR} -p ${DOCKER_CREDS_PSW}"
+        echo "********Docker Push******"
+        sh "docker push ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${GIT_COMMIT}"
+    }
+}
+
 
 
