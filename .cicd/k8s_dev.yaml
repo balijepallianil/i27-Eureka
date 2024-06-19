@@ -13,7 +13,7 @@ spec:
         name: i27-eureka-dev
     spec:
       containers:
-      - image: DIT
+      - image: nginx
         name: i27-eureka-dev
         # resources:
 #   requests: 
@@ -34,4 +34,4 @@ spec:
   ports:
   - protocol: TCP
     port: 80 # This is the service port 
-    targetPort: 8761
+    targetPort: 80
