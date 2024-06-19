@@ -5,32 +5,33 @@ metadata:
 spec:
   replicas: 1
   selector:
-    matchlabels:
-    name: i27-eureka-dev
+    matchLabels:
+      name: i27-eureka-dev
   template:
     metadata:
       labels:
         name: i27-eureka-dev
-      spec:
-        containers:
-        - images: DIT
-          name: i27-eureka-dev
-
-
+    spec:
+      containers:
+      - image: DIT
+        name: i27-eureka-dev
+        # resources:
+#   requests: 
+#     memory: "128Mi"
+#     cpu: "250m"
+#   limits:
+#     memory: "256Mi"
+#     cpu: "500m"
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: i27-eureka-dev
+  name: i27-eureka-dev-svc
 spec:
   selector:
     name: i27-eureka-dev
-  type: NodePort
+  type: NodePort # ClusterIP, NodePort, LoadBalancer
   ports:
-  - port: 80
-    protocal: TCP
+  - protocol: TCP
+    port: 80 # This is the service port 
     targetPort: 8761
-
-
-
-
