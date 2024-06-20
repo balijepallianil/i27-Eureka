@@ -13,7 +13,7 @@ spec:
         name: i27-eureka-dev
     spec:
       containers:
-      - image: nginx
+      - image: DIT
         name: i27-eureka-dev
         # resources:
 #   requests: 
