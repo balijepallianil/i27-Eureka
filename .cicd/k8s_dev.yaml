@@ -34,4 +34,4 @@ spec:
   ports:
   - protocol: TCP
     port: 80 # This is the service port 
-    targetPort: 80
+    targetPort: 8761
