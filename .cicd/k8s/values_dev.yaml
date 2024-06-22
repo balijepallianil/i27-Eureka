@@ -1,0 +1,9 @@
+labelname: i27-Eureka
+deployname: i27-Eureka-dev
+namespace: i27-dev-ns
+replicas:
+  default: 1
+image:
+  name: i27anilb3/eureka
+  tag: ${GIT_COMMIT}
+targetPort: 8761
