@@ -1,5 +1,5 @@
-labelname: i27-Eureka
-deployname: i27-Eureka-dev
+labelname: i27-eureka
+deployname: i27-eureka-dev
 namespace: i27-dev-ns
 replicas:
   default: 1
